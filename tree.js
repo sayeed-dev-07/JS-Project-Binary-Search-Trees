@@ -49,11 +49,39 @@ export default class Tree {
             this.#pretty(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
         }
     }
+    insert(value){
+        let data = this.root;
+        while(data){
+            if (value === data.data) {
+                console.log('value already exists!');
+                return;
+            }
+            if (value < data.data) {
+                if (data.left === null) {
+                    data.left = new Node(value);
+                    return
+                }
+                data = data.left;
+                
+            }
+            else{
+                if (data.right === null) {
+                    data.right = new Node(value);
+                    return
+                }
+                data = data.right;
+            }
+            
+            
+        }
+    }
 }
 
-let test = new Tree([1, 2, 3, 4]);
+let test = new Tree([1, 2, 3, 4 , 29, 27, 28, 15, 15]);
 test.buildTree()
 test.prettyPrint();
+test.insert(154);
+test.prettyPrint()
 
 
 
