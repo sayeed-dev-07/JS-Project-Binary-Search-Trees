@@ -1,4 +1,5 @@
 import Node from "./node.js";
+import mergeSort from "./mergeSort.js";
 
 export default class Tree{
     constructor(arr){
@@ -6,10 +7,11 @@ export default class Tree{
         this.root = null;
     }
     buildTree(arr){
-        this.#sortArray(arr)
+        let newArr = mergeSort(arr) ;
+        return newArr
     }
-    #sortArray(arr){
-        let newSortedArr = [];
 
-    }
 }
+
+let test = new Tree();
+console.log(test.buildTree([4, 4, 4, 2, 2, 4]));
