@@ -75,12 +75,29 @@ export default class Tree {
             
         }
     }
+    deleteItem(value){
+        let current = this.root;
+        while(current){
+            if (value === current.data && current.left === null && current.right === null) {
+                current.data = null;
+                console.log('success');
+                return;
+            }else if(value < current.data){
+                current = current.left;
+            }else if(value > current.data){
+                current = current.right;
+            }
+
+        }
+    }
 }
 
-let test = new Tree([1, 2, 3, 4 , 29, 27, 28, 15, 15]);
+let test = new Tree([1, 2, 3, 4]);
 test.buildTree()
-test.prettyPrint();
-test.insert(154);
+// test.prettyPrint();
+// test.insert(154);
+// test.prettyPrint()
+test.deleteItem(3)
 test.prettyPrint()
 
 
