@@ -1,33 +1,28 @@
-import Node from "./node.js";
 import mergeSort from "./mergeSort.js";
+import Node from "./node.js";
 
 export default class Tree {
-    constructor(arr) {
-        this.arr = mergeSort(arr);
+    constructor() {
         this.root = null;
-        this.tree = []
     }
+    buildTree(array) {
+        let newArr = mergeSort(array);
+        this.root = this.#buildTreeRecursive(newArr, 0, newArr.length - 1);
 
-    buildTree() {
-        this.root = this.#buildTreeRecursion(this.arr, 0, this.arr.length - 1);
-        // console.log(this.tree);
-        // return this.root;
     }
-
-    #buildTreeRecursion(arr, start, end) {
-        if (start > end) return null;
-
+    #buildTreeRecursive(arr, start, end) {
+        if (start > end) {
+            return null;
+        }
         let mid = Math.floor((start + end) / 2);
         let root = new Node(arr[mid]);
 
-        this.tree.push(root.data)
 
-        root.left = this.#buildTreeRecursion(arr, start, mid - 1);
-        root.right = this.#buildTreeRecursion(arr, mid + 1, end);
+        root.left = this.#buildTreeRecursive(arr, start, mid - 1);
+        root.right = this.#buildTreeRecursive(arr, mid + 1, end);
 
         return root;
     }
-
     prettyPrint() {
         if (!this.root) {
             console.log("Tree is empty. Call buildTree() first.");
@@ -35,7 +30,6 @@ export default class Tree {
         }
         this.#pretty(this.root);
     }
-
     #pretty(node, prefix = "", isLeft = true) {
         if (node === null) return;
 
@@ -77,57 +71,70 @@ export default class Tree {
     }
     deleteItem(value){
         this.root = this.#delete(this.root, value)
+        this.#rebalance()
     }
-    #min(root) {
-        let current = root;
-        while (current.left !== null) {
-            current = current.left;
-        }
-        return current.data;
-    }
-    
-    #delete(root, value) {
+    #delete(root, value){
         if (!root) {
             return root;
-        }
-        
-        if (value < root.data) {
-            root.left = this.#delete(root.left, value);
-        } else if (value > root.data) {
-            root.right = this.#delete(root.right, value);
-        } else {
-            // Node with only one child or no child
-            if (root.left === null) {
+        }else if(value < root.data){
+            root.left = this.#delete(root.left, value)
+        }else if(value > root.data){
+            root.right = this.#delete(root.right, value)
+        }else{
+            // case last node with no left and right nodes 
+            if (root.left === null && root.right === null) {
+                return null;
+            }else if(root.left === null){
                 return root.right;
-            } else if (root.right === null) {
+            }else if(root.right === null){
                 return root.left;
+            }else{
+                root.data = this.#min(root);
+                root.right = this.#delete(root.right, root.data)
             }
-            
-            // Node with two children: get inorder successor (smallest in right subtree)
-            root.data = this.#min(root.right);
-            
-            // Delete the inorder successor
-            root.right = this.#delete(root.right, root.data);
         }
-        
-        return root;  // This was missing
+        return root;
+    }
+    #min(root){
+        root = root.right;
+        while(root !== null && root.left !== null){
+            root = root.left;
+        }
+        return root.data;
+    }
+
+    // these codes for re balance the tree after deleteing some values from the tree .
+
+    #rebalance() {
+        const nodes = this.#inOrder();
+        this.root = this.#buildTreeRecursive(nodes, 0, nodes.length - 1);
     }
     
-    
+    #inOrder(node = this.root, result = []) {
+        if (!node) return result;
+        this.#inOrder(node.left, result);
+        result.push(node.data);
+        this.#inOrder(node.right, result);
+        return result;
+    }
 
 }
 
-let arr = [1, 3, 4, 5, 6, 6];
-let test = new Tree(arr);
-test.buildTree();
-test.prettyPrint();
-
-test.insert(100)
+let test = new Tree();
+test.buildTree([1, 2, 4, 5, 3, 40, 5, 12, 10])
 test.prettyPrint()
-test.deleteItem(1);
-test.buildTree()
+test.insert(1000);
+test.insert(-1000);
+test.insert(33);
+console.log('----------------');
 test.prettyPrint()
+test.deleteItem(-1000)
+test.deleteItem(1000);
+console.log('------------');
+test.deleteItem(4)
+test.deleteItem(5)
+test.deleteItem(2)
+test.deleteItem(3)
 
-
-// test.print()
-
+console.log('---------------');
+test.prettyPrint()
