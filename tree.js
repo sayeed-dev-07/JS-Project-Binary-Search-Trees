@@ -10,8 +10,8 @@ export default class Tree {
 
     buildTree() {
         this.root = this.#buildTreeRecursion(this.arr, 0, this.arr.length - 1);
-        console.log(this.tree);
-        return this.root;
+        // console.log(this.tree);
+        // return this.root;
     }
 
     #buildTreeRecursion(arr, start, end) {
@@ -75,21 +75,58 @@ export default class Tree {
 
         }
     }
+    deleteItem(value){
+        this.root = this.#delete(this.root, value)
+    }
+    #min(root) {
+        let current = root;
+        while (current.left !== null) {
+            current = current.left;
+        }
+        return current.data;
+    }
+    
+    #delete(root, value) {
+        if (!root) {
+            return root;
+        }
+        
+        if (value < root.data) {
+            root.left = this.#delete(root.left, value);
+        } else if (value > root.data) {
+            root.right = this.#delete(root.right, value);
+        } else {
+            // Node with only one child or no child
+            if (root.left === null) {
+                return root.right;
+            } else if (root.right === null) {
+                return root.left;
+            }
+            
+            // Node with two children: get inorder successor (smallest in right subtree)
+            root.data = this.#min(root.right);
+            
+            // Delete the inorder successor
+            root.right = this.#delete(root.right, root.data);
+        }
+        
+        return root;  // This was missing
+    }
     
     
 
 }
 
-let test = new Tree([1, 2, 3, 4]);
+let arr = [1, 3, 4, 5, 6, 6];
+let test = new Tree(arr);
+test.buildTree();
+test.prettyPrint();
+
+test.insert(100)
+test.prettyPrint()
+test.deleteItem(1);
 test.buildTree()
-// test.prettyPrint();
-// test.insert(154);
-// test.prettyPrint()
-test.deleteItem(1)
-// test.buildTree()
-// test.prettyPrint()
-
-
+test.prettyPrint()
 
 
 // test.print()
