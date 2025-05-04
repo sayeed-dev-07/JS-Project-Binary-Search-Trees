@@ -43,6 +43,20 @@ export default class Tree {
             this.#pretty(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
         }
     }
+    find(value){
+        let current = this.root;
+        while(current){
+            if (value === current.data) {
+                return current;
+            }else
+            if (value < current.data) {
+                current = current.left;
+            }else if(value > current.data){
+                current = current.right;
+            }
+        }
+        return 'Not Found'
+    }
     insert(value) {
         let data = this.root;
         while (data) {
@@ -120,6 +134,13 @@ export default class Tree {
 
 }
 
+
+
+
+
+// test area 
+
+
 let test = new Tree();
 test.buildTree([1, 2, 4, 5, 3, 40, 5, 12, 10])
 test.prettyPrint()
@@ -138,3 +159,4 @@ test.deleteItem(3)
 
 console.log('---------------');
 test.prettyPrint()
+console.log(test.find(12));
