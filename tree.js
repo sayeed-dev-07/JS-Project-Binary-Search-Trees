@@ -49,9 +49,9 @@ export default class Tree {
             this.#pretty(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
         }
     }
-    insert(value){
+    insert(value) {
         let data = this.root;
-        while(data){
+        while (data) {
             if (value === data.data) {
                 console.log('value already exists!');
                 return;
@@ -62,34 +62,48 @@ export default class Tree {
                     return
                 }
                 data = data.left;
-                
+
             }
-            else{
+            else {
                 if (data.right === null) {
                     data.right = new Node(value);
                     return
                 }
                 data = data.right;
             }
-            
-            
-        }
-    }
-    deleteItem(value){
-        let current = this.root;
-        while(current){
-            if (value === current.data && current.left === null && current.right === null) {
-                current.data = null;
-                console.log('success');
-                return;
-            }else if(value < current.data){
-                current = current.left;
-            }else if(value > current.data){
-                current = current.right;
-            }
+
 
         }
     }
+    findMIn(root) {
+        while (!root.left) {
+            root = root.left
+        }
+        return root;
+    }
+    deleteItem(root = this.root ,value) {
+        if (root === null) {
+            return root;
+        }
+        if (value > root.data) {
+            this.deleteItem(root.right, value)
+        }
+        if (value < root.data) {
+            this.deleteItem(root.left, value)
+        }else{
+            if (root.left === null && root.right === null) {
+                delete root.data;
+                root.data = null;
+            }
+            else if(root.left === null){
+                let temp = root.right;
+                delete root.data;
+                root.data = temp;
+            }
+        }
+
+    }
+
 }
 
 let test = new Tree([1, 2, 3, 4]);
@@ -97,9 +111,12 @@ test.buildTree()
 // test.prettyPrint();
 // test.insert(154);
 // test.prettyPrint()
-test.deleteItem(3)
-test.prettyPrint()
+test.deleteItem(1)
+// test.buildTree()
+// test.prettyPrint()
 
 
 
+
+// test.print()
 
