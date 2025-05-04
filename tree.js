@@ -75,34 +75,8 @@ export default class Tree {
 
         }
     }
-    findMIn(root) {
-        while (!root.left) {
-            root = root.left
-        }
-        return root;
-    }
-    deleteItem(root = this.root ,value) {
-        if (root === null) {
-            return root;
-        }
-        if (value > root.data) {
-            this.deleteItem(root.right, value)
-        }
-        if (value < root.data) {
-            this.deleteItem(root.left, value)
-        }else{
-            if (root.left === null && root.right === null) {
-                delete root.data;
-                root.data = null;
-            }
-            else if(root.left === null){
-                let temp = root.right;
-                delete root.data;
-                root.data = temp;
-            }
-        }
-
-    }
+    
+    
 
 }
 
