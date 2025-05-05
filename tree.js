@@ -59,6 +59,7 @@ export default class Tree {
     }
     insert(value) {
         let data = this.root;
+        
         while (data) {
             if (value === data.data) {
                 console.log('value already exists!');
@@ -82,6 +83,7 @@ export default class Tree {
 
 
         }
+
     }
     deleteItem(value) {
         this.root = this.#delete(this.root, value)
@@ -132,6 +134,8 @@ export default class Tree {
         return result;
     }
 
+    // level order treversal
+
     levelOrder(callback = null) {
         try {
             if (!callback) {
@@ -166,6 +170,30 @@ export default class Tree {
 
     }
 
+    // inorder treversal
+
+    inOrder(callback = null) {
+        try {
+            if (!callback) {
+                throw new Error('No callback passed !!');
+            }
+            let result = this.#inOrderInner(callback, this.root);
+            return result;
+        
+        } catch (error) {
+            console.error(`Error : ${error.message}` ); 
+        }
+    }
+    #inOrderInner(callback, root, arr = []) {
+        if (!root) {
+            return arr;
+        }
+        this.#inOrderInner(callback, root.left, arr)
+        arr.push(callback(root));
+        this.#inOrderInner(callback, root.right, arr)
+        return arr;
+    }
+
 }
 
 
@@ -196,10 +224,16 @@ test.prettyPrint()
 // console.log(test.find(12));
 
 console.log('---------------');
+test.insert(4)
+test.insert(41)
+test.insert(6)
+test.insert(14)
+test.prettyPrint()
 
+console.log('---------------');
 function hello(root) {
-   root.data = root.data * 2;
-   return root;
+   return root.data;
 }
 
-console.log(test.levelOrder(hello));
+// console.log(test.levelOrder(hello));
+console.log(test.inOrder(hello));
