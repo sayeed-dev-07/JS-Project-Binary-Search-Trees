@@ -245,13 +245,42 @@ export default class Tree {
     }
 
     height(value){
-        let count = 0;
-        let root = this.root;
-        if (root.data === value) {
-            count = 1;
+        let node = this.find(value);
+
+        if (typeof node === 'string') {
+            return 'Node not found in the tree'
         }
-        
+        return this.#heightHelper(node)
     }
+    #heightHelper(node){
+        if (node === null) {
+            return -1;
+        }
+        let left = this.#heightHelper(node.left);
+        let right = this.#heightHelper(node.right);
+        return 1 +  Math.max(left, right)
+    }
+    deepth(value){
+        let node = this.find(value);
+        if (typeof node === 'string') {
+            return null;
+        }
+        let current = this.root;
+        let count = 0;
+        while(current !== node){
+            if (node.data < current.data) {
+                current = current.left;
+                count++;
+            }
+            else if(node.data > current.data){
+                current = current.right;
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    
 
 }
 
@@ -268,15 +297,19 @@ test.prettyPrint()
 test.insert(1000);
 test.insert(-1000);
 test.insert(33);
+test.insert(400);
+test.insert(3332);
+test.insert(3400);
+test.insert(33332);
 console.log('----------------');
 test.prettyPrint()
 test.deleteItem(-1000)
 test.deleteItem(1000);
 console.log('------------');
-test.deleteItem(4)
-test.deleteItem(5)
-test.deleteItem(2)
-test.deleteItem(3)
+// test.deleteItem(4)
+// test.deleteItem(5)
+// test.deleteItem(2)
+// test.deleteItem(3)
 
 console.log('---------------');
 test.prettyPrint()
@@ -291,7 +324,12 @@ function hello(root) {
     return root;
 }
 
-console.log(test.levelOrder(hello));
-console.log(test.preOrder(hello));
-console.log(test.inOrder(hello));
-console.log(test.postOrder(hello));
+// console.log(test.levelOrder(hello));
+// console.log(test.preOrder(hello));
+// console.log(test.inOrder(hello));
+// console.log(test.postOrder(hello));
+
+// console.log(test.root);
+
+console.log(test.height(12));
+console.log(test.deepth(12));
