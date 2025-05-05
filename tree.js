@@ -57,9 +57,11 @@ export default class Tree {
         }
         return 'Not Found'
     }
-    insert(value) {
-        let data = this.root;
-        
+    insert(value){
+        this.#insertInner(value)
+        this.#rebalance()
+    }
+    #insertInner(value, data = this.root) {
         while (data) {
             if (value === data.data) {
                 console.log('value already exists!');
@@ -80,7 +82,6 @@ export default class Tree {
                 }
                 data = data.right;
             }
-
 
         }
 
@@ -194,6 +195,64 @@ export default class Tree {
         return arr;
     }
 
+     // preOrder treversal
+
+    preOrder(callback = null) {
+        try {
+            if (!callback) {
+                throw new Error('No callback passed !!');
+            }
+            let result = this.#preOrderInner(callback, this.root);
+            return result;
+        
+        } catch (error) {
+            console.error(`Error : ${error.message}` ); 
+        }
+    }
+    #preOrderInner(callback, root, arr = []) {
+        if (!root) {
+            return arr;
+        }
+        arr.push(callback(root));
+        this.#preOrderInner(callback, root.left, arr)
+        this.#preOrderInner(callback, root.right, arr)
+        return arr;
+    }
+
+     // postOrder treversal
+    
+    postOrder(callback = null) {
+        try {
+            if (!callback) {
+                throw new Error('No callback passed !!');
+            }
+            let result = this.#postOrderInner(callback, this.root);
+            return result;
+        
+        } catch (error) {
+            console.error(`Error : ${error.message}` ); 
+        }
+    }
+    #postOrderInner(callback, root, arr = []) {
+        if (!root) {
+            return arr;
+        }
+        
+        this.#postOrderInner(callback, root.left, arr)
+        this.#postOrderInner(callback, root.right, arr)
+        arr.push(callback(root));
+        return arr;
+    }
+
+    height(value){
+        let count = 0;
+        let root = this.root;
+        if (root.data === value) {
+            count = 1;
+        }
+        
+    }
+
 }
 
 
@@ -224,16 +283,15 @@ test.prettyPrint()
 // console.log(test.find(12));
 
 console.log('---------------');
-test.insert(4)
-test.insert(41)
-test.insert(6)
-test.insert(14)
 test.prettyPrint()
 
 console.log('---------------');
 function hello(root) {
-   return root.data;
+    root.data = root.data * 2
+    return root;
 }
 
-// console.log(test.levelOrder(hello));
+console.log(test.levelOrder(hello));
+console.log(test.preOrder(hello));
 console.log(test.inOrder(hello));
+console.log(test.postOrder(hello));
