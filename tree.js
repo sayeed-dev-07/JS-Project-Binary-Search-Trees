@@ -43,17 +43,17 @@ export default class Tree {
             this.#pretty(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
         }
     }
-    find(value){
+    find(value) {
         let current = this.root;
-        while(current){
+        while (current) {
             if (value === current.data) {
                 return current;
-            }else
-            if (value < current.data) {
-                current = current.left;
-            }else if(value > current.data){
-                current = current.right;
-            }
+            } else
+                if (value < current.data) {
+                    current = current.left;
+                } else if (value > current.data) {
+                    current = current.right;
+                }
         }
         return 'Not Found'
     }
@@ -83,35 +83,35 @@ export default class Tree {
 
         }
     }
-    deleteItem(value){
+    deleteItem(value) {
         this.root = this.#delete(this.root, value)
         this.#rebalance()
     }
-    #delete(root, value){
+    #delete(root, value) {
         if (!root) {
             return root;
-        }else if(value < root.data){
+        } else if (value < root.data) {
             root.left = this.#delete(root.left, value)
-        }else if(value > root.data){
+        } else if (value > root.data) {
             root.right = this.#delete(root.right, value)
-        }else{
+        } else {
             // case last node with no left and right nodes 
             if (root.left === null && root.right === null) {
                 return null;
-            }else if(root.left === null){
+            } else if (root.left === null) {
                 return root.right;
-            }else if(root.right === null){
+            } else if (root.right === null) {
                 return root.left;
-            }else{
+            } else {
                 root.data = this.#min(root);
                 root.right = this.#delete(root.right, root.data)
             }
         }
         return root;
     }
-    #min(root){
+    #min(root) {
         root = root.right;
-        while(root !== null && root.left !== null){
+        while (root !== null && root.left !== null) {
             root = root.left;
         }
         return root.data;
@@ -123,13 +123,47 @@ export default class Tree {
         const nodes = this.#inOrder();
         this.root = this.#buildTreeRecursive(nodes, 0, nodes.length - 1);
     }
-    
+
     #inOrder(node = this.root, result = []) {
         if (!node) return result;
         this.#inOrder(node.left, result);
         result.push(node.data);
         this.#inOrder(node.right, result);
         return result;
+    }
+
+    levelOrder(callback = null) {
+        try {
+            if (!callback) {
+                throw new Error('No callback passed !!');
+            }
+            return this.#levelOrderInner(callback);
+        } catch (error) {
+            console.error(`Error : ${error.message}` ); 
+        }
+    }
+    #levelOrderInner(callback) {
+        if (!this.root) {
+            return;
+        }
+        let result = []
+        let queue = []
+        queue.push(this.root)
+        while (queue.length > 0) {
+            let current = queue.shift();
+
+            result.push(callback(current));
+            if (current.left) {
+                queue.push(current.left)
+            }
+            if (current.right) {
+                queue.push(current.right)
+            }
+
+        }
+        return result;
+
+
     }
 
 }
@@ -159,4 +193,13 @@ test.deleteItem(3)
 
 console.log('---------------');
 test.prettyPrint()
-console.log(test.find(12));
+// console.log(test.find(12));
+
+console.log('---------------');
+
+function hello(root) {
+   root.data = root.data * 2;
+   return root;
+}
+
+console.log(test.levelOrder(hello));
