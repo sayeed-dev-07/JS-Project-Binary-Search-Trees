@@ -260,7 +260,7 @@ export default class Tree {
         let right = this.#heightHelper(node.right);
         return 1 +  Math.max(left, right)
     }
-    deepth(value){
+    depth(value){
         let node = this.find(value);
         if (typeof node === 'string') {
             return null;
@@ -332,4 +332,4 @@ function hello(root) {
 // console.log(test.root);
 
 console.log(test.height(12));
-console.log(test.deepth(12));
+console.log(test.depth(12));
