@@ -59,6 +59,7 @@ export default class Tree {
     }
     insert(value) {
         this.#insertInner(value)
+        // this.buildTree(this.root)
         // this.#rebalance()
     }
     #insertInner(value, data = this.root) {
@@ -281,7 +282,7 @@ export default class Tree {
         return count;
     }
     isBalanced() {
-        return this.#checkBalanced(this.root);
+         console.log(this.#checkBalanced(this.root));;
     }
 
 
