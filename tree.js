@@ -57,9 +57,9 @@ export default class Tree {
         }
         return 'Not Found'
     }
-    insert(value){
+    insert(value) {
         this.#insertInner(value)
-        this.#rebalance()
+        // this.#rebalance()
     }
     #insertInner(value, data = this.root) {
         while (data) {
@@ -88,7 +88,7 @@ export default class Tree {
     }
     deleteItem(value) {
         this.root = this.#delete(this.root, value)
-        this.#rebalance()
+        // this.#rebalance()
     }
     #delete(root, value) {
         if (!root) {
@@ -122,9 +122,10 @@ export default class Tree {
 
     // these codes for re balance the tree after deleteing some values from the tree .
 
-    #rebalance() {
+    rebalance() {
         const nodes = this.#inOrder();
         this.root = this.#buildTreeRecursive(nodes, 0, nodes.length - 1);
+        console.log('Sucessfully Rebalance the tree.');
     }
 
     #inOrder(node = this.root, result = []) {
@@ -144,7 +145,7 @@ export default class Tree {
             }
             return this.#levelOrderInner(callback);
         } catch (error) {
-            console.error(`Error : ${error.message}` ); 
+            console.error(`Error : ${error.message}`);
         }
     }
     #levelOrderInner(callback) {
@@ -180,9 +181,9 @@ export default class Tree {
             }
             let result = this.#inOrderInner(callback, this.root);
             return result;
-        
+
         } catch (error) {
-            console.error(`Error : ${error.message}` ); 
+            console.error(`Error : ${error.message}`);
         }
     }
     #inOrderInner(callback, root, arr = []) {
@@ -195,7 +196,7 @@ export default class Tree {
         return arr;
     }
 
-     // preOrder treversal
+    // preOrder treversal
 
     preOrder(callback = null) {
         try {
@@ -204,9 +205,9 @@ export default class Tree {
             }
             let result = this.#preOrderInner(callback, this.root);
             return result;
-        
+
         } catch (error) {
-            console.error(`Error : ${error.message}` ); 
+            console.error(`Error : ${error.message}`);
         }
     }
     #preOrderInner(callback, root, arr = []) {
@@ -219,8 +220,8 @@ export default class Tree {
         return arr;
     }
 
-     // postOrder treversal
-    
+    // postOrder treversal
+
     postOrder(callback = null) {
         try {
             if (!callback) {
@@ -228,23 +229,23 @@ export default class Tree {
             }
             let result = this.#postOrderInner(callback, this.root);
             return result;
-        
+
         } catch (error) {
-            console.error(`Error : ${error.message}` ); 
+            console.error(`Error : ${error.message}`);
         }
     }
     #postOrderInner(callback, root, arr = []) {
         if (!root) {
             return arr;
         }
-        
+
         this.#postOrderInner(callback, root.left, arr)
         this.#postOrderInner(callback, root.right, arr)
         arr.push(callback(root));
         return arr;
     }
 
-    height(value){
+    height(value) {
         let node = this.find(value);
 
         if (typeof node === 'string') {
@@ -252,84 +253,54 @@ export default class Tree {
         }
         return this.#heightHelper(node)
     }
-    #heightHelper(node){
+    #heightHelper(node) {
         if (node === null) {
             return -1;
         }
         let left = this.#heightHelper(node.left);
         let right = this.#heightHelper(node.right);
-        return 1 +  Math.max(left, right)
+        return 1 + Math.max(left, right)
     }
-    depth(value){
+    depth(value) {
         let node = this.find(value);
         if (typeof node === 'string') {
             return null;
         }
         let current = this.root;
         let count = 0;
-        while(current !== node){
+        while (current !== node) {
             if (node.data < current.data) {
                 current = current.left;
                 count++;
             }
-            else if(node.data > current.data){
+            else if (node.data > current.data) {
                 current = current.right;
                 count++;
             }
         }
         return count;
     }
-    
-    
+    isBalanced() {
+        return this.#checkBalanced(this.root);
+    }
+
+
+    #checkBalanced(node) {
+        const check = (node) => {
+            if (node === null) return 0;
+
+            const left = check(node.left);
+            if (left === -1) return -1;
+
+            const right = check(node.right);
+            if (right === -1) return -1;
+
+            if (Math.abs(left - right) > 1) return -1;
+
+            return Math.max(left, right) + 1;
+        };
+
+        return check(node) !== -1;
+    }
 
 }
-
-
-
-
-
-// test area 
-
-
-let test = new Tree();
-test.buildTree([1, 2, 4, 5, 3, 40, 5, 12, 10])
-test.prettyPrint()
-test.insert(1000);
-test.insert(-1000);
-test.insert(33);
-test.insert(400);
-test.insert(3332);
-test.insert(3400);
-test.insert(33332);
-console.log('----------------');
-test.prettyPrint()
-test.deleteItem(-1000)
-test.deleteItem(1000);
-console.log('------------');
-// test.deleteItem(4)
-// test.deleteItem(5)
-// test.deleteItem(2)
-// test.deleteItem(3)
-
-console.log('---------------');
-test.prettyPrint()
-// console.log(test.find(12));
-
-console.log('---------------');
-test.prettyPrint()
-
-console.log('---------------');
-function hello(root) {
-    root.data = root.data * 2
-    return root;
-}
-
-// console.log(test.levelOrder(hello));
-// console.log(test.preOrder(hello));
-// console.log(test.inOrder(hello));
-// console.log(test.postOrder(hello));
-
-// console.log(test.root);
-
-console.log(test.height(12));
-console.log(test.depth(12));
